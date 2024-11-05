@@ -124,8 +124,7 @@ fn repro_1183() {
                                             from.clone(),
                                             KeyType::ED25519,
                                             from.as_ref(),
-                                        )
-                                        .into(),
+                                        ),
                                         1,
                                         *block.header().prev_hash(),
                                     ),

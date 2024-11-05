@@ -113,7 +113,7 @@ fn test_get_execution_outcome(is_tx_successful: bool) {
                 1,
                 "near.0".parse().unwrap(),
                 "near.1".parse().unwrap(),
-                &signer.into(),
+                &signer,
                 10000,
                 genesis_hash,
             )
@@ -123,8 +123,8 @@ fn test_get_execution_outcome(is_tx_successful: bool) {
                 "near.0".parse().unwrap(),
                 "near.1".parse().unwrap(),
                 10,
-                signer.public_key.clone(),
-                &signer.into(),
+                signer.public_key(),
+                &signer,
                 genesis_hash,
             )
         };
@@ -372,7 +372,7 @@ fn test_tx_not_enough_balance_must_return_error() {
             1,
             "near.0".parse().unwrap(),
             "near.1".parse().unwrap(),
-            &signer.into(),
+            &signer,
             1100000000000000000000000000000000,
             genesis_hash,
         );
@@ -436,7 +436,7 @@ fn test_check_unknown_tx_must_return_error() {
             1,
             "near.0".parse().unwrap(),
             "near.0".parse().unwrap(),
-            &signer.into(),
+            &signer,
             10000,
             genesis_hash,
         );
@@ -500,7 +500,7 @@ fn test_tx_status_on_lightclient_must_return_does_not_track_shard() {
             1,
             "near.1".parse().unwrap(),
             "near.1".parse().unwrap(),
-            &signer.into(),
+            &signer,
             10000,
             genesis_hash,
         );

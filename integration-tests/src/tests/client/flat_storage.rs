@@ -129,8 +129,7 @@ fn test_flat_storage_creation_sanity() {
     // Process some blocks with flat storage. Then remove flat storage data from disk.
     {
         let mut env = setup_env(&genesis, store.store());
-        let signer =
-            InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+        let signer = InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
         let genesis_hash = *env.clients[0].chain.genesis().hash();
         for height in 1..START_HEIGHT {
             env.produce_block(0, height);
@@ -244,8 +243,7 @@ fn test_flat_storage_creation_two_shards() {
     // Process some blocks with flat storages for two shards. Then remove flat storage data from disk for shard 0.
     {
         let mut env = setup_env(&genesis, store.store());
-        let signer =
-            InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+        let signer = InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
         let genesis_hash = *env.clients[0].chain.genesis().hash();
         for height in 1..START_HEIGHT {
             env.produce_block(0, height);
@@ -511,8 +509,7 @@ fn test_not_supported_block() {
     let store = create_test_store();
 
     let mut env = setup_env(&genesis, store);
-    let signer =
-        InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+    let signer = InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
     let genesis_hash = *env.clients[0].chain.genesis().hash();
 
     // Produce blocks up to `START_HEIGHT`.

@@ -92,7 +92,7 @@ impl ThreadNode {
         ThreadNode {
             config,
             state: ThreadNodeState::Stopped,
-            signer: Arc::new(signer.into()),
+            signer: Arc::new(signer),
             dir: tempfile::Builder::new().prefix("thread_node").tempdir().unwrap(),
             account_id,
         }

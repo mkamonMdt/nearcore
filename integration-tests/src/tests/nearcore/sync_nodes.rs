@@ -49,10 +49,11 @@ fn sync_state_stake_change() {
                 start_with_config(dir1.path(), near1.clone()).expect("start_with_config");
 
             let genesis_hash = *genesis_block(&genesis).hash();
-            let signer = Arc::new(
-                InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1")
-                    .into(),
-            );
+            let signer = Arc::new(InMemorySigner::from_seed(
+                "test1".parse().unwrap(),
+                KeyType::ED25519,
+                "test1",
+            ));
             let unstake_transaction = SignedTransaction::stake(
                 1,
                 "test1".parse().unwrap(),

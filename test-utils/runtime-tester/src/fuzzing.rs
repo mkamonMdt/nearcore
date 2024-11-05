@@ -1,6 +1,6 @@
 use crate::run_test::{BlockConfig, NetworkConfig, RuntimeConfig, Scenario, TransactionConfig};
 use near_chain_configs::{test_utils::TESTING_INIT_BALANCE, NEAR_BASE};
-use near_crypto::{InMemorySigner, KeyType, PublicKey};
+use near_crypto::{InMemorySigner, KeyType, PublicKey, Signer};
 use near_primitives::{
     account::{AccessKey, AccessKeyPermission, FunctionCallPermission},
     transaction::{
@@ -153,7 +153,7 @@ impl TransactionConfig {
                 KeyType::ED25519,
                 new_account.id.as_ref(),
             )
-            .public_key;
+            .public_key();
             Ok(TransactionConfig {
                 nonce: scope.nonce(),
                 signer_id: signer_account.id,
@@ -364,7 +364,7 @@ pub struct Account {
 
 #[derive(Clone)]
 pub struct Key {
-    pub signer: InMemorySigner,
+    pub signer: Signer,
     pub access_key: AccessKey,
 }
 
@@ -559,24 +559,15 @@ impl Scope {
             KeyType::ED25519,
             format!("test{}.{}", account_id, nonce).as_str(),
         );
+        let public_key = signer.public_key();
         self.accounts[account_id].keys.insert(
             nonce,
-            Key {
-                signer: signer.clone(),
-                access_key: AccessKey { nonce, permission: permission.clone() },
-            },
+            Key { signer, access_key: AccessKey { nonce, permission: permission.clone() } },
         );
-        Ok(AddKeyAction {
-            public_key: signer.public_key,
-            access_key: AccessKey { nonce, permission },
-        })
+        Ok(AddKeyAction { public_key, access_key: AccessKey { nonce, permission } })
     }
 
-    pub fn full_access_signer(
-        &self,
-        u: &mut Unstructured,
-        account: &Account,
-    ) -> Result<InMemorySigner> {
+    pub fn full_access_signer(&self, u: &mut Unstructured, account: &Account) -> Result<Signer> {
         let account_idx = self.usize_id(account);
         let possible_signers = self.accounts[account_idx].full_access_keys();
         if possible_signers.is_empty() {
@@ -596,7 +587,7 @@ impl Scope {
         u: &mut Unstructured,
         account: &Account,
         receiver_id: &str,
-    ) -> Result<InMemorySigner> {
+    ) -> Result<Signer> {
         let account_idx = self.usize_id(account);
         let possible_signers = self.accounts[account_idx].function_call_keys(receiver_id);
         if possible_signers.is_empty() {
@@ -618,7 +609,7 @@ impl Scope {
     ) -> Result<PublicKey> {
         let account_idx = self.usize_id(account);
         let (nonce, key) = self.accounts[account_idx].random_key(u)?;
-        let public_key = key.signer.public_key;
+        let public_key = key.signer.public_key();
         self.accounts[account_idx].keys.remove(&nonce);
         Ok(public_key)
     }
@@ -646,7 +637,7 @@ impl Account {
         }
     }
 
-    pub fn full_access_keys(&self) -> Vec<InMemorySigner> {
+    pub fn full_access_keys(&self) -> Vec<Signer> {
         let mut full_access_keys = vec![];
         for (_, key) in &self.keys {
             if key.access_key.permission == AccessKeyPermission::FullAccess {
@@ -656,7 +647,7 @@ impl Account {
         full_access_keys
     }
 
-    pub fn function_call_keys(&self, receiver_id: &str) -> Vec<InMemorySigner> {
+    pub fn function_call_keys(&self, receiver_id: &str) -> Vec<Signer> {
         let mut function_call_keys = vec![];
         for (_, key) in &self.keys {
             match &key.access_key.permission {

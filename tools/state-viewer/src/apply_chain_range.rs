@@ -571,8 +571,7 @@ mod test {
         let epoch_length = 4;
         let (store, genesis, mut env) = setup(epoch_length);
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -615,8 +614,7 @@ mod test {
         let epoch_length = 4;
         let (store, genesis, mut env) = setup(epoch_length);
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),

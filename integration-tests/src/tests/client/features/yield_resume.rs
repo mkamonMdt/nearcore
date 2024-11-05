@@ -60,8 +60,7 @@ fn prepare_env(test_env_gas_limit: Option<u64>) -> TestEnv {
     }
     let mut env = TestEnv::builder(&genesis.config).nightshade_runtimes(&genesis).build();
     let genesis_block = env.clients[0].chain.get_block_by_height(0).unwrap();
-    let signer =
-        InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+    let signer = InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
 
     // Submit transaction deploying contract to test0
     let tx = SignedTransaction::from_actions(
@@ -107,7 +106,7 @@ fn yield_then_resume() {
         200,
         "test0".parse().unwrap(),
         "test0".parse().unwrap(),
-        &signer.clone().into(),
+        &signer,
         vec![Action::FunctionCall(Box::new(FunctionCallAction {
             method_name: "call_yield_create_return_promise".to_string(),
             args: yield_payload.clone(),
@@ -139,7 +138,7 @@ fn yield_then_resume() {
         201,
         "test0".parse().unwrap(),
         "test0".parse().unwrap(),
-        &signer.into(),
+        &signer,
         vec![Action::FunctionCall(Box::new(FunctionCallAction {
             method_name: "call_yield_resume_read_data_id_from_storage".to_string(),
             args: yield_payload,

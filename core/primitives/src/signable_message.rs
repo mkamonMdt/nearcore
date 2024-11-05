@@ -222,7 +222,7 @@ impl From<SignableMessageType> for MessageDiscriminant {
 
 #[cfg(test)]
 mod tests {
-    use near_crypto::{InMemorySigner, KeyType, PublicKey};
+    use near_crypto::{InMemorySigner, KeyType, PublicKey, Signer};
     use near_primitives_core::account::id::AccountIdRef;
 
     use super::*;
@@ -230,7 +230,7 @@ mod tests {
 
     // Note: this is currently a simplified copy of near-primitives::test_utils::create_user_test_signer
     // TODO: consider whether it’s worth re-unifying them? it’s test-only code anyway.
-    fn create_user_test_signer(account_id: &AccountIdRef) -> InMemorySigner {
+    fn create_user_test_signer(account_id: &AccountIdRef) -> Signer {
         InMemorySigner::from_seed(account_id.to_owned(), KeyType::ED25519, account_id.as_str())
     }
 
@@ -243,8 +243,7 @@ mod tests {
 
         let delegate_action = delegate_action(sender_id, receiver_id, signer.public_key());
         let signable = SignableMessage::new(&delegate_action, SignableMessageType::DelegateAction);
-        let signed =
-            SignedDelegateAction { signature: signable.sign(&signer.into()), delegate_action };
+        let signed = SignedDelegateAction { signature: signable.sign(&signer), delegate_action };
 
         assert!(signed.verify());
     }
@@ -262,8 +261,7 @@ mod tests {
             discriminant: MessageDiscriminant::new_on_chain(wrong_nep).unwrap(),
             msg: &delegate_action,
         };
-        let signed =
-            SignedDelegateAction { signature: signable.sign(&signer.into()), delegate_action };
+        let signed = SignedDelegateAction { signature: signable.sign(&signer), delegate_action };
 
         assert!(!signed.verify());
     }
@@ -280,8 +278,7 @@ mod tests {
         // here we use it as an off-chain only signature
         let wrong_discriminant = MessageDiscriminant::new_off_chain(correct_nep).unwrap();
         let signable = SignableMessage { discriminant: wrong_discriminant, msg: &delegate_action };
-        let signed =
-            SignedDelegateAction { signature: signable.sign(&signer.into()), delegate_action };
+        let signed = SignedDelegateAction { signature: signable.sign(&signer), delegate_action };
 
         assert!(!signed.verify());
     }

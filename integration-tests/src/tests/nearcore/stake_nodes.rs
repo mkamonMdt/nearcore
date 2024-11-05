@@ -13,7 +13,7 @@ use crate::tests::test_helpers::heavy_test;
 use near_actix_test_utils::run_actix;
 use near_chain_configs::{Genesis, NEAR_BASE};
 use near_client::{ClientActor, GetBlock, ProcessTxRequest, Query, Status, ViewClientActor};
-use near_crypto::{InMemorySigner, KeyType};
+use near_crypto::{InMemorySigner, KeyType, Signer};
 use near_network::tcp;
 use near_network::test_utils::{convert_boot_nodes, WaitOrTimeoutActor};
 use near_o11y::testonly::init_integration_logger;
@@ -29,7 +29,7 @@ use {near_primitives::types::BlockId, primitive_types::U256};
 #[derive(Clone)]
 struct TestNode {
     account_id: AccountId,
-    signer: Arc<InMemorySigner>,
+    signer: Arc<Signer>,
     config: NearConfig,
     client: Addr<ClientActor>,
     view_client: Addr<ViewClientActor>,
@@ -128,7 +128,7 @@ fn test_stake_nodes() {
                 1,
                 test_nodes[1].account_id.clone(),
                 // &*test_nodes[1].config.block_producer.as_ref().unwrap().signer,
-                &(*test_nodes[1].signer).clone().into(),
+                &(*test_nodes[1].signer).clone(),
                 TESTING_INIT_STAKE,
                 test_nodes[1].config.validator_signer.get().unwrap().public_key(),
                 test_nodes[1].genesis_hash,
@@ -213,14 +213,11 @@ fn test_validator_kickout() {
             let stakes = (0..num_nodes / 2).map(|_| NEAR_BASE + rng.gen_range(1..100));
             let stake_transactions = stakes.enumerate().map(|(i, stake)| {
                 let test_node = &test_nodes[i];
-                let signer = Arc::new(
-                    InMemorySigner::from_seed(
-                        test_node.account_id.clone(),
-                        KeyType::ED25519,
-                        test_node.account_id.as_ref(),
-                    )
-                    .into(),
-                );
+                let signer = Arc::new(InMemorySigner::from_seed(
+                    test_node.account_id.clone(),
+                    KeyType::ED25519,
+                    test_node.account_id.as_ref(),
+                ));
                 SignedTransaction::stake(
                     1,
                     test_node.account_id.clone(),
@@ -367,14 +364,11 @@ fn test_validator_join() {
                 false,
                 true,
             );
-            let signer = Arc::new(
-                InMemorySigner::from_seed(
-                    test_nodes[1].account_id.clone(),
-                    KeyType::ED25519,
-                    test_nodes[1].account_id.as_ref(),
-                )
-                .into(),
-            );
+            let signer = Arc::new(InMemorySigner::from_seed(
+                test_nodes[1].account_id.clone(),
+                KeyType::ED25519,
+                test_nodes[1].account_id.as_ref(),
+            ));
             let unstake_transaction = SignedTransaction::stake(
                 1,
                 test_nodes[1].account_id.clone(),
@@ -384,14 +378,11 @@ fn test_validator_join() {
                 test_nodes[1].genesis_hash,
             );
 
-            let signer = Arc::new(
-                InMemorySigner::from_seed(
-                    test_nodes[2].account_id.clone(),
-                    KeyType::ED25519,
-                    test_nodes[2].account_id.as_ref(),
-                )
-                .into(),
-            );
+            let signer = Arc::new(InMemorySigner::from_seed(
+                test_nodes[2].account_id.clone(),
+                KeyType::ED25519,
+                test_nodes[2].account_id.as_ref(),
+            ));
             let stake_transaction = SignedTransaction::stake(
                 1,
                 test_nodes[2].account_id.clone(),

@@ -31,7 +31,7 @@ fn benchmark_large_chunk_production_time() {
 
     let account_id = env.get_client_id(0);
     let signer =
-        InMemorySigner::from_seed(account_id.clone(), KeyType::ED25519, account_id.as_ref()).into();
+        InMemorySigner::from_seed(account_id.clone(), KeyType::ED25519, account_id.as_ref());
     let last_block_hash = env.clients[0].chain.head().unwrap().last_block_hash;
     for i in 0..n_txes {
         let tx = SignedTransaction::from_actions(

@@ -170,7 +170,7 @@ fn run_chunk_validation_test(
                 round as u64,
                 sender_account,
                 receiver_account,
-                &signer.into(),
+                &signer,
                 ONE_NEAR,
                 tip.last_block_hash,
             );
@@ -427,7 +427,7 @@ fn test_eth_implicit_accounts() {
     let alice_init_balance = 3 * ONE_NEAR;
     let create_alice_tx = SignedTransaction::send_money(
         1,
-        signer.account_id.clone(),
+        signer.get_account_id(),
         alice_eth_account.clone(),
         &signer.clone().into(),
         alice_init_balance,
@@ -437,7 +437,7 @@ fn test_eth_implicit_accounts() {
     let bob_init_balance = 0;
     let create_bob_tx = SignedTransaction::send_money(
         2,
-        signer.account_id.clone(),
+        signer.get_account_id(),
         bob_eth_account.clone(),
         &signer.clone().into(),
         bob_init_balance,
@@ -459,9 +459,9 @@ fn test_eth_implicit_accounts() {
     assert_eq!(view_balance(&env, &bob_eth_account), bob_init_balance);
 
     // 2. Add function call access key to one eth-implicit account
-    let relayer_account_id = signer.account_id.clone();
+    let relayer_account_id = signer.get_account_id();
     let mut relayer_signer = NearSigner { account_id: &relayer_account_id, signer };
-    let relayer_pk = relayer_signer.signer.public_key.clone();
+    let relayer_pk = relayer_signer.signer.public_key();
     let action = Action::AddKey(Box::new(AddKeyAction {
         public_key: relayer_pk,
         access_key: AccessKey {

@@ -58,14 +58,14 @@ impl Genesis {
             if i < num_validator_seats {
                 validators.push(AccountInfo {
                     account_id: account.clone(),
-                    public_key: signer.public_key.clone(),
+                    public_key: signer.public_key(),
                     amount: TESTING_INIT_STAKE,
                 });
             }
             add_account_with_key(
                 &mut records,
                 account,
-                &signer.public_key.clone(),
+                &signer.public_key(),
                 TESTING_INIT_BALANCE - if i < num_validator_seats { TESTING_INIT_STAKE } else { 0 },
                 if i < num_validator_seats { TESTING_INIT_STAKE } else { 0 },
                 CryptoHash::default(),
@@ -183,7 +183,7 @@ pub fn add_protocol_account(records: &mut Vec<StateRecord>) {
     add_account_with_key(
         records,
         PROTOCOL_TREASURY_ACCOUNT.parse().unwrap(),
-        &signer.public_key,
+        &signer.public_key(),
         TESTING_INIT_BALANCE,
         0,
         CryptoHash::default(),

@@ -8,7 +8,7 @@ use std::path::Path;
 use std::sync::Arc;
 
 /// Enum for Signer, that can sign with some subset of supported curves.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize, PartialEq)]
 pub enum Signer {
     /// Dummy signer, does not hold a key. Use for tests only!
     Empty(EmptySigner),
@@ -50,6 +50,13 @@ impl Signer {
             Signer::InMemory(signer) => signer.write_to_file(path),
         }
     }
+
+    pub fn get_account_id(&self) -> AccountId {
+        match self {
+            Signer::Empty(_) => unimplemented!(),
+            Signer::InMemory(signer) => signer.account_id.clone(),
+        }
+    }
 }
 
 impl From<EmptySigner> for Signer {
@@ -64,8 +71,21 @@ impl From<InMemorySigner> for Signer {
     }
 }
 
+impl From<Signer> for KeyFile {
+    fn from(signer: Signer) -> KeyFile {
+        match signer {
+            Signer::Empty(_) => unimplemented!(),
+            Signer::InMemory(signer) => KeyFile {
+                account_id: signer.account_id,
+                public_key: signer.public_key,
+                secret_key: signer.secret_key,
+            },
+        }
+    }
+}
+
 // Signer that returns empty signature. Used for transaction testing.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize, PartialEq)]
 pub struct EmptySigner {}
 
 impl EmptySigner {
@@ -92,17 +112,17 @@ pub struct InMemorySigner {
 
 impl InMemorySigner {
     #[cfg(feature = "rand")]
-    pub fn from_seed(account_id: AccountId, key_type: KeyType, seed: &str) -> Self {
+    pub fn from_seed(account_id: AccountId, key_type: KeyType, seed: &str) -> Signer {
         let secret_key = SecretKey::from_seed(key_type, seed);
+        Signer::InMemory(Self { account_id, public_key: secret_key.public_key(), secret_key })
+    }
+
+    pub fn from_secret_key(account_id: AccountId, secret_key: SecretKey) -> InMemorySigner {
         Self { account_id, public_key: secret_key.public_key(), secret_key }
     }
 
-    pub fn from_secret_key(account_id: AccountId, secret_key: SecretKey) -> Self {
-        Self { account_id, public_key: secret_key.public_key(), secret_key }
-    }
-
-    pub fn from_file(path: &Path) -> io::Result<Self> {
-        KeyFile::from_file(path).map(Self::from)
+    pub fn from_file(path: &Path) -> io::Result<Signer> {
+        KeyFile::from_file(path).map(Self::from).map(|s| Signer::InMemory(s))
     }
 
     pub fn public_key(&self) -> PublicKey {

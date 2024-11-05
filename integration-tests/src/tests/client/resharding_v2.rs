@@ -652,7 +652,7 @@ fn setup_test_env_with_cross_contract_txs(
             1,
             account_id.clone(),
             account_id.clone(),
-            &signer.into(),
+            &signer,
             actions,
             genesis_hash,
             0,
@@ -808,7 +808,7 @@ fn gen_cross_contract_tx_impl(
                 }, "id": 0 },
                 {"action_add_key_with_full_access": {
                     "promise_index": 0,
-                    "public_key": to_base64(&borsh::to_vec(&signer_new_account.public_key).unwrap()),
+                    "public_key": to_base64(&borsh::to_vec(&signer_new_account.public_key()).unwrap()),
                     "nonce": 0,
                 }, "id": 0 }
             ],
@@ -821,7 +821,7 @@ fn gen_cross_contract_tx_impl(
         nonce,
         account0.clone(),
         account1.clone(),
-        &signer0.into(),
+        &signer0,
         vec![Action::FunctionCall(Box::new(FunctionCallAction {
             method_name: "call_promise".to_string(),
             args: serde_json::to_vec(&data).unwrap(),

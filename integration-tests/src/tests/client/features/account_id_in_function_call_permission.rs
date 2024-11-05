@@ -36,7 +36,7 @@ fn test_account_id_in_function_call_permission_upgrade() {
     };
 
     let signer: Signer =
-        InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+        InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
     let tx = TransactionV0 {
         signer_id: "test0".parse().unwrap(),
         receiver_id: "test0".parse().unwrap(),
@@ -123,7 +123,7 @@ fn test_very_long_account_id() {
         nonce: 0,
         block_hash: tip.last_block_hash,
     })
-    .sign(&signer.into());
+    .sign(&signer);
 
     assert_eq!(
         env.clients[0].process_tx(tx, false, false),

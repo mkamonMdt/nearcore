@@ -114,7 +114,7 @@ fn send_tx(
                         nonce,
                         from.clone(),
                         to.clone(),
-                        &signer.into(),
+                        &signer,
                         amount,
                         block_hash,
                     ),

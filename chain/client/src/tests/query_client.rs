@@ -164,7 +164,7 @@ fn test_execution_outcome_for_chunk() {
                 1,
                 "test".parse().unwrap(),
                 "near".parse().unwrap(),
-                &signer.into(),
+                &signer,
                 10,
                 block_hash,
             );

@@ -76,10 +76,11 @@ fn setup_runtime_for_shard(
     let mut signers = vec![];
     let mut initial_state = tries.new_trie_update(shard_uid, root);
     for account_id in initial_accounts.into_iter() {
-        let signer: Arc<Signer> = Arc::new(
-            InMemorySigner::from_seed(account_id.clone(), KeyType::ED25519, account_id.as_ref())
-                .into(),
-        );
+        let signer: Arc<Signer> = Arc::new(InMemorySigner::from_seed(
+            account_id.clone(),
+            KeyType::ED25519,
+            account_id.as_ref(),
+        ));
         let mut initial_account = account_new(initial_balance, CryptoHash::default());
         // For the account and a full access key
         initial_account.set_storage_usage(182);

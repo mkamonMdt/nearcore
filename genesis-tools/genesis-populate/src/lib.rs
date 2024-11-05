@@ -342,13 +342,13 @@ impl GenesisBuilder {
         records.push(account_record);
         let access_key_record = StateRecord::AccessKey {
             account_id: account_id.clone(),
-            public_key: signer.public_key.clone(),
+            public_key: signer.public_key(),
             access_key: AccessKey::full_access(),
         };
         set_access_key(
             &mut state_update,
             account_id.clone(),
-            signer.public_key,
+            signer.public_key(),
             &AccessKey::full_access(),
         );
         records.push(access_key_record);

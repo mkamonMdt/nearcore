@@ -34,7 +34,7 @@ fn start_node() -> ThreadNode {
 fn test_check_tx_error_log() {
     let node = start_node();
     let signer =
-        Arc::new(InMemorySigner::from_seed(alice_account(), KeyType::ED25519, "alice.near").into());
+        Arc::new(InMemorySigner::from_seed(alice_account(), KeyType::ED25519, "alice.near"));
     let block_hash = node.user().get_best_block_hash().unwrap();
     let tx = SignedTransaction::from_actions(
         1,
@@ -76,7 +76,7 @@ fn test_deliver_tx_error_log() {
         node.genesis().config.min_gas_price,
     );
     let signer =
-        Arc::new(InMemorySigner::from_seed(alice_account(), KeyType::ED25519, "alice.near").into());
+        Arc::new(InMemorySigner::from_seed(alice_account(), KeyType::ED25519, "alice.near"));
     let block_hash = node.user().get_best_block_hash().unwrap();
     let cost = fee_helper.create_account_transfer_full_key_cost_no_reward();
     let tx = SignedTransaction::from_actions(

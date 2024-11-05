@@ -113,10 +113,11 @@ impl ProcessNode {
         let mut rng = rand::thread_rng();
         let work_dir = env::temp_dir().join(format!("process_node_{}", rng.gen::<u64>()));
         let account_id = config.validator_signer.get().unwrap().validator_id().clone();
-        let signer = Arc::new(
-            InMemorySigner::from_seed(account_id.clone(), KeyType::ED25519, account_id.as_ref())
-                .into(),
-        );
+        let signer = Arc::new(InMemorySigner::from_seed(
+            account_id.clone(),
+            KeyType::ED25519,
+            account_id.as_ref(),
+        ));
         let result =
             ProcessNode { config, work_dir, state: ProcessNodeState::Stopped, signer, account_id };
         result.reset_storage();

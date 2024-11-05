@@ -1587,7 +1587,7 @@ mod tests {
         let near_config = NearConfig::new(
             Config::default(),
             genesis,
-            KeyFile::from(&signer),
+            KeyFile::from(signer),
             MutableConfigValue::new(None, "validator_signer"),
         )
         .unwrap();

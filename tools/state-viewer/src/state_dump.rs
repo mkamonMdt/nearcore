@@ -413,8 +413,7 @@ mod test {
         let epoch_length = 4;
         let (store, genesis, mut env, near_config) = setup(epoch_length, PROTOCOL_VERSION, false);
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -468,7 +467,7 @@ mod test {
         let genesis_hash = *env.clients[0].chain.genesis().hash();
 
         let signer0 =
-            InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0").into();
+            InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
         let tx00 = SignedTransaction::from_actions(
             1,
             "test0".parse().unwrap(),
@@ -492,7 +491,7 @@ mod test {
         assert_eq!(env.clients[0].process_tx(tx01, false, false), ProcessTxResponse::ValidTx);
 
         let signer1 =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx1 = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -555,8 +554,7 @@ mod test {
         let epoch_length = 4;
         let (store, genesis, mut env, near_config) = setup(epoch_length, PROTOCOL_VERSION, false);
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -607,8 +605,7 @@ mod test {
         let epoch_length = 4;
         let (store, genesis, mut env, near_config) = setup(epoch_length, PROTOCOL_VERSION, false);
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -742,7 +739,7 @@ mod test {
             1,
             "test1".parse().unwrap(),
             "test0".parse().unwrap(),
-            &signer.into(),
+            &signer,
             1,
             genesis_hash,
         );
@@ -819,8 +816,7 @@ mod test {
             .runtimes(vec![nightshade_runtime])
             .build();
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),
@@ -890,8 +886,7 @@ mod test {
         let (store, genesis, mut env, near_config) = setup(epoch_length, PROTOCOL_VERSION, false);
 
         let genesis_hash = *env.clients[0].chain.genesis().hash();
-        let signer =
-            InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1").into();
+        let signer = InMemorySigner::from_seed("test1".parse().unwrap(), KeyType::ED25519, "test1");
         let tx = SignedTransaction::stake(
             1,
             "test1".parse().unwrap(),

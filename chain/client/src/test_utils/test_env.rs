@@ -12,7 +12,7 @@ use near_chain_configs::GenesisConfig;
 use near_chain_primitives::error::QueryError;
 use near_chunks::client::ShardsManagerResponse;
 use near_chunks::test_utils::{MockClientAdapterForShardsManager, SynchronousShardsManagerAdapter};
-use near_crypto::{InMemorySigner, KeyType};
+use near_crypto::{InMemorySigner, KeyType, Signer};
 use near_network::client::ProcessTxResponse;
 use near_network::shards_manager::ShardsManagerRequestFromNetwork;
 use near_network::test_utils::MockPeerManagerAdapter;
@@ -499,7 +499,7 @@ impl TestEnv {
             1,
             account_id.clone(),
             account_id,
-            &signer.into(),
+            &signer,
             100,
             self.clients[id].chain.head().unwrap().last_block_hash,
         );
@@ -726,15 +726,15 @@ impl TestEnv {
     pub fn tx_from_actions(
         &mut self,
         actions: Vec<Action>,
-        signer: &InMemorySigner,
+        signer: &Signer,
         receiver: AccountId,
     ) -> SignedTransaction {
         let tip = self.clients[0].chain.head().unwrap();
         SignedTransaction::from_actions(
             tip.height + 1,
-            signer.account_id.clone(),
+            signer.get_account_id(),
             receiver,
-            &signer.clone().into(),
+            &signer,
             actions,
             tip.last_block_hash,
             0,
@@ -757,7 +757,7 @@ impl TestEnv {
         let user_nonce = tip.height + 1;
         let relayer_nonce = tip.height + 1;
         let delegate_action = DelegateAction {
-            sender_id: inner_signer.account_id.clone(),
+            sender_id: inner_signer.get_account_id(),
             receiver_id,
             actions: actions
                 .into_iter()
@@ -773,7 +773,7 @@ impl TestEnv {
             relayer_nonce,
             relayer,
             sender,
-            &relayer_signer.into(),
+            &relayer_signer,
             vec![Action::Delegate(Box::new(signed_delegate_action))],
             tip.last_block_hash,
             0,
@@ -819,7 +819,7 @@ impl TestEnv {
             gas: 3 * 10u64.pow(14),
             deposit: 0,
         }))];
-        let tx = self.tx_from_actions(actions, &signer, signer.account_id.clone());
+        let tx = self.tx_from_actions(actions, &signer, signer.get_account_id());
         self.execute_tx(tx).unwrap()
     }
 

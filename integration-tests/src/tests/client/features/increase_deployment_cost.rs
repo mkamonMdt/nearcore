@@ -44,12 +44,12 @@ fn test_deploy_cost_increased() {
     let signer = InMemorySigner::from_seed("test0".parse().unwrap(), KeyType::ED25519, "test0");
     let actions = vec![Action::DeployContract(DeployContractAction { code: test_contract })];
 
-    let tx = env.tx_from_actions(actions.clone(), &signer, signer.account_id.clone());
+    let tx = env.tx_from_actions(actions.clone(), &signer, signer.get_account_id());
     let old_outcome = env.execute_tx(tx).unwrap();
 
     env.upgrade_protocol_to_latest_version();
 
-    let tx = env.tx_from_actions(actions, &signer, signer.account_id.clone());
+    let tx = env.tx_from_actions(actions, &signer, signer.get_account_id());
     let new_outcome = env.execute_tx(tx).unwrap();
 
     assert_matches!(old_outcome.status, FinalExecutionStatus::SuccessValue(_));
